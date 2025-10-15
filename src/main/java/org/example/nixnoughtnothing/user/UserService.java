@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,10 +18,6 @@ public class UserService {
 
     public List<User> getUserList() {
         return userRepository.getUserList();
-    }
-
-    public User getUserByName(String name) {
-        return userRepository.findUserByName(name);
     }
 
     @Transactional
@@ -37,5 +34,10 @@ public class UserService {
         return User.builder()
                 .name(savedUser.getName())
                 .build();
+    }
+
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(u -> User.builder().name(u.getName()).build());
     }
 }

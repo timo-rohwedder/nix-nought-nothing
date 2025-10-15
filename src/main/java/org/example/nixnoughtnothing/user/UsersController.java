@@ -1,5 +1,6 @@
 package org.example.nixnoughtnothing.user;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
@@ -23,23 +24,18 @@ public class UsersController {
         return ResponseEntity.ok(userService.getUserList());
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<User> getUserByName(@PathVariable String name) {
-        User user = userService.getUserByName(name);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(user);
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         var createdUser = userService.createUser(user);
 
-        var createdUri = MvcUriComponentsBuilder
-            .fromMethodCall(on(UsersController.class).getUserByName(createdUser.name()))
-            .build()
-            .toUri();
+        var createdUri = MvcUriComponentsBuilder.fromMethodCall(on(UsersController.class).getUserById(createdUser.id())).build().toUri();
 
         return ResponseEntity.created(createdUri).build();
     }
