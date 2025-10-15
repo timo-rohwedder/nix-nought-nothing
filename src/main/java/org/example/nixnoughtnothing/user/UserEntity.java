@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class UserEntity {
 
     @Id
@@ -14,6 +16,7 @@ public class UserEntity {
 
     @Setter
     @Getter
+    @Column(nullable = false)
     private String name;
 
 }
