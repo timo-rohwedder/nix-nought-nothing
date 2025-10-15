@@ -33,10 +33,13 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         var createdUser = userService.createUser(user);
 
-        var createdUri = MvcUriComponentsBuilder.fromMethodCall(on(UsersController.class).getUserByName(createdUser.name())).build().toUri();
+        var createdUri = MvcUriComponentsBuilder
+            .fromMethodCall(on(UsersController.class).getUserByName(createdUser.name()))
+            .build()
+            .toUri();
 
         return ResponseEntity.created(createdUri).build();
     }
