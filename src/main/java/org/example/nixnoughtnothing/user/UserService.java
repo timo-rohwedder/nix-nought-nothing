@@ -23,7 +23,12 @@ public class UserService {
         return userRepository.findUserByName(name);
     }
 
+    @Transactional
     public User createUser(User user) {
+        if (user == null || user.name() == null || user.name().isBlank()) {
+            throw new IllegalArgumentException("User name must not be blank");
+        }
+
         var userEntity = new UserEntity();
         userEntity.setName(user.name());
 
